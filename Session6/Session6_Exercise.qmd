@@ -7,8 +7,15 @@ format:
     embed-resources: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```{r}
+#| include: false
+
+rm(list=ls()) # clearing the envrionment
+```
+
+```{r setup}
+#| messahe: false
+#| warning: false
 
 library(tidyverse) # so that we can use ggplot2 and other tidyverse packages
 ```
@@ -25,13 +32,14 @@ dat<-data.frame(
   type=factor(sample(c("A","B"),size=100,prob=c(0.6,0.4),replace=T)),
   x=rnorm(100,sd=5),
   y=rexp(100)
-)
+) %>%
+  mutate(
+    z=ifelse(type=="A", 2*x-y+5, 1.25*x-0.5*y+1) + rnorm(100,sd=1.25)
+  )
 
-dat$z<-ifelse(dat$type=="A", 2*dat$x-dat$y+5, 1.25*dat$x-0.5*dat$y+1) + rnorm(100,sd=1.25)
 
-if(!dir.exists("examplePack/data")){dir.create("examplePack/data",recursive=T)}
-
-save(dat,file="examplePack/data/dat.rda")
+if(!dir.exists("data")){dir.create("data",recursive=T)}
+save(dat,file="data/dat.rda")
 
 rm(dat) # just so that we have to read it back in again
 ```
@@ -41,7 +49,7 @@ rm(dat) # just so that we have to read it back in again
 In the chunk below this text commentary, the simulated data is loaded back into R (this is where I would expect your documents to have started).
 
 ```{r loadData}
-load("examplePack/data/dat.rda")
+load("data/dat.rda")
 
 ls() # just to check the data is now loaded
 ```
